@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author: markus
@@ -105,7 +106,7 @@ public class MoviesServiceImpl implements MoviesService {
 
     @Override
     public List<MovieDO> mGetMovies(List<Long> ids) throws IOException {
-        MgetResponse<MovieDO> mgetResponse = esClient.mget(mget -> mget.index(INDEX_NAME).ids(ids.stream().map(String::valueOf).toList()), MovieDO.class);
+        MgetResponse<MovieDO> mgetResponse = esClient.mget(mget -> mget.index(INDEX_NAME).ids(ids.stream().map(String::valueOf).collect(Collectors.toList())), MovieDO.class);
         List<MultiGetResponseItem<MovieDO>> docs = mgetResponse.docs();
         List<MovieDO> movieDOS = new ArrayList<>(docs.size());
         for (MultiGetResponseItem<MovieDO> doc : docs) {
